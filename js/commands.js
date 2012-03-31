@@ -510,7 +510,7 @@
 
             output += 'NAVIGATION<br />';
             output += '  dir - displays contents of current directory<br />';
-            output += '  cd directory - navigates to the directory<br />';
+            output += '  cd directory - changes the current directory<br />';
             output += '  cls - clears the terminal window<br />';
             output += '<br />';
 

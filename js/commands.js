@@ -78,10 +78,10 @@
                 needsAuth: true,
                 syntax: 'cd directory'
             },
-            'clear': {
-                func: clear,
+            'cls': {
+                func: cls,
                 needsAuth: false,
-                syntax: 'clear'
+                syntax: 'cls'
             },
             'help': {
                 func: help,
@@ -304,7 +304,7 @@
         }
 
         // NAVIGATION commands
-        function clear()
+        function cls()
         {
             $container.empty();
         }
@@ -511,7 +511,7 @@
             output += 'NAVIGATION<br />';
             output += '  dir - displays contents of current directory<br />';
             output += '  cd directory - navigates to the directory<br />';
-            output += '  clear - clears the terminal window<br />';
+            output += '  cls - clears the terminal window<br />';
             output += '<br />';
 
             output += 'FILE<br />';

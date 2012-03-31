@@ -27,7 +27,7 @@
     // requeried to get the update.
     proto.mkdir = function(parent, name, callback)
     {
-        // cant create a folder with no name or with a name that already exists under the parent.
+        // can't create a folder with no name or with a name that already exists under the parent.
         if (!name || name == '' || parent.getChild(name))
         {
             callback(false);
@@ -216,7 +216,7 @@
             calledBack = true;
         });
 
-        // sometimes the getLoginStatus doesnt ever call the callback function. This ensures that it gets called at some point.
+        // sometimes the getLoginStatus doesn't ever call the callback function. This ensures that it gets called at some point.
         setTimeout(function() {
             if (!calledBack)
             {

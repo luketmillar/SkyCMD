@@ -504,7 +504,7 @@
         {
             var output = '';
             output += 'ACCOUNT<br />';
-            output += '  login - opens the login window, make sure your browser doesnt block the popup<br/>';
+            output += '  login - opens the login window, make sure your browser doesn\'t block the popup<br/>';
             output += '  logout<br />';
             output += '<br />';
 

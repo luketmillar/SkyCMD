@@ -138,13 +138,13 @@
                 needsAuth: true,
                 syntax: 'download file_name'
             },
-            'mv': {
+            'move': {
                 func: function($output, callback, commandData) { return movecopy($output, callback, commandData, 'MOVE'); },
                 requiredArgs: 2,
                 needsAuth: true,
                 syntax: 'move source destination'
             },
-            'cp': {
+            'copy': {
                 func: function($output, callback, commandData) { return movecopy($output, callback, commandData, 'COPY'); },
                 requiredArgs: 2,
                 needsAuth: true,
@@ -516,8 +516,8 @@
 
             output += 'FILE<br />';
             output += '  mkdir directory - creates a new directory<br />';
-            output += '  mv source destination - moves the source file to the destination<br />';
-            output += '  cp source destination - copies the source file to the destination<br />';
+            output += '  move source destination - moves the source file to the destination<br />';
+            output += '  copy source destination - copies the source file to the destination<br />';
             output += '  view file - opens a file in the browser<br />';
             output += '  download file - downloads a file<br />';
             output += '<br />';

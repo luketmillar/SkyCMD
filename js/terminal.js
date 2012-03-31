@@ -28,8 +28,8 @@
                               '    \\__ \\/ / / \\  // /    /  |/  |  / / / /\n' + 
                               '  ____/ /   /  / // /___ / /\\_/| | / /_/ /\n' + 
                               ' /_____/_/|_\\ /_/ \\____//_/    |_|/_____/\n\n\n</pre>';
-			welcomeText += 'type "help" for list of supported commands<br /><br />';
-			welcomeText += '<br />';
+            welcomeText += 'type "help" for list of supported commands<br /><br />';
+            welcomeText += '<br />';
             $container.html(welcomeText);
             
             newCommandLine();
@@ -47,7 +47,7 @@
                 var handled = false;
                 var text = $currentConsoleLine.text();
 
-				// remove photo
+                // remove photo
                 if ($('#overlay').size() > 0)
                 {
                     $('#overlay').remove();
@@ -129,38 +129,38 @@
                 if (e.which == keymap.tab) {
                     var words = searchTerm.split(' ');
                     var lastWord = words[words.length - 1];
-    				var newText = searchTerm.substr(0, searchTerm.length - lastWord.length);
+                    var newText = searchTerm.substr(0, searchTerm.length - lastWord.length);
 
                     datamodel.getFile(context.currentId, function(folder)
-					{
-	                    // need to find all of the search matches
-	                    if (matches.length == 0)
-	                    {
-	                        for (var i = 0; i < folder.sortedChildList.length; i++)
-	                        {
-	                            var file = folder.sortedChildList[i];
-	                            if (file.name.substr(0, lastWord.length).toLowerCase() == lastWord.toLowerCase())
-	                            {
-	                                matches.push(file.name);
-	                            }
-	                        }   
-	                    }
+                    {
+                        // need to find all of the search matches
+                        if (matches.length == 0)
+                        {
+                            for (var i = 0; i < folder.sortedChildList.length; i++)
+                            {
+                                var file = folder.sortedChildList[i];
+                                if (file.name.substr(0, lastWord.length).toLowerCase() == lastWord.toLowerCase())
+                                {
+                                    matches.push(file.name);
+                                }
+                            }   
+                        }
 
-	                    // get the current match and update the command
-	    				var filename = matches[searchIndex];
-	    				if (filename)
-	    				{
-	        				if (filename.indexOf(' ') != -1)
-	        				{
-	        				    filename = '"' + filename + '"';
-	        				}
-	                        $currentConsoleLine.text(newText + filename);   
-	    				}
+                        // get the current match and update the command
+                        var filename = matches[searchIndex];
+                        if (filename)
+                        {
+                            if (filename.indexOf(' ') != -1)
+                            {
+                                filename = '"' + filename + '"';
+                            }
+                            $currentConsoleLine.text(newText + filename);   
+                        }
 
-	                    searchIndex++;
-	                    if (searchIndex >= matches.length)
-	                        searchIndex = 0;	
-					});
+                        searchIndex++;
+                        if (searchIndex >= matches.length)
+                            searchIndex = 0;    
+                    });
                     
                     return false;
                 }

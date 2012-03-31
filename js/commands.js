@@ -1,7 +1,7 @@
 (function() {
     if (!window.skycmd)
         window.skycmd = {};
-        
+
     skycmd.commands = function($container, datamodel, context)
     {
         // RUN
@@ -16,7 +16,7 @@
         {
             var output = '';
             var immediateCallback = true;
-            
+
             var commandData = parse(commandText);
             if (commandData.error)
             {
@@ -24,12 +24,12 @@
                 callback();
                 return;
             }
-            
+
             var user = datamodel.getUser();
             var command = commands[commandData.name] || {};
             command.requiredArgs = command.requiredArgs == null ? 0 : command.requiredArgs;
             command.optionalArgs = command.optionalArgs == null ? 0 : command.optionalArgs;
-            
+
             if (!command.func)
             {
                 $output.html('invalid command');
@@ -49,13 +49,13 @@
                 var value = command.func($output, callback, commandData);
                 immediateCallback = value == null || value == true;
             }
-            
+
             if (immediateCallback)
             {
                 callback();
             }
         };
-        
+
         var commands = {
             'login': {
                 func: login,
@@ -88,30 +88,30 @@
                 needsAuth: false,
                 syntax: 'help'
             },
-            'play': {                
+            'play': {
                 func: play,
                 optionalArgs: 1,
                 needsAuth: true,
                 syntax: 'play song.mp3'
             },
-            'queue': {                
+            'queue': {
                 func: queue,
                 optionalArgs: 1,
                 needsAuth: true,
                 syntax: 'queue music.mp3 OR queue'
             },
-            'view': {                
+            'view': {
                 func: view,
                 requiredArgs: 1,
                 needsAuth: true,
                 syntax: 'view photo.jpg'
             },
-            'pause': {                
+            'pause': {
                 func: pause,
                 needsAuth: true,
                 syntax: 'pause (pauses the playing song)'
             },
-            'next': {                
+            'next': {
                 func: next,
                 needsAuth: true,
                 syntax: 'next (goes to the next song in your queue)'
@@ -163,7 +163,7 @@
                 syntax: 'fdisk'
             }
         };
-        
+
         // FILE commands
         function mkdir($output, callback, commandData)
         {
@@ -178,7 +178,7 @@
                     $output.html('directory with that filename already exists');
                     return true;
                 }
-    
+
                 datamodel.mkdir(folder, filename, function(succeeded)
                 {
                     if (succeeded)
@@ -192,10 +192,10 @@
                     callback();
                 });
             });
-            
+
             return false;
         }
-        
+
         function view($output, callback, commandData)
         {
             var filename = commandData.args[0];
@@ -208,11 +208,11 @@
                 else
                 {
                     window.open(file.link,'_blank');
-                }    
+                }
             });
-            
+
         }
-        
+
         function download($output, callback, commandData)
         {
             var filename = commandData.args[0];
@@ -222,7 +222,7 @@
                 window.open(file.source,'_blank');
             });
         }
-        
+
         function movecopy($output, callback, commandData, movecopy)
         {
             var source = commandData.args[0];
@@ -243,16 +243,16 @@
                     {
                         destinationId = folder.parent_id;
                     }
-                    
+
                     datamodel.movecopy(sourceFile, destinationId, movecopy, function(succeeded)
                     {
                         if (succeeded)
                         {
-                            $output.html(t_movedcopied + ' ' + source + ' to ' + destination);    
+                            $output.html(t_movedcopied + ' ' + source + ' to ' + destination);
                         }
                         else
                         {
-                            $output.html(t_movecopy + ' failed');    
+                            $output.html(t_movecopy + ' failed');
                         }
                         callback();
                     });
@@ -264,10 +264,10 @@
                     callback();
                 }
             });
-            
+
             return false;
         }
-        
+
         // ACCOUNT commands
         function logout($output)
         {
@@ -276,7 +276,7 @@
             context.currentId = '';
             context.pwd = '';
         }
-        
+
         function login($output, callback)
         {
             if (!datamodel.getUser())
@@ -312,7 +312,7 @@
         function dir($output, callback, commandData)
         {
             $output.html('loading');
-            
+
             // wait for the directory to load
             datamodel.getFile(context.currentId, function(folder)
             {
@@ -338,13 +338,13 @@
                     // this folder is empty so print out 'no files'
                     $output.html('[no files]');
                 }
-    
+
                 callback();
             });
-            
+
             return false;
         }
-        
+
         function cd($output, callback, commandData)
         {
             var directoryName = commandData.args[0];
@@ -357,7 +357,7 @@
                         context.pwd = parent.path;
                         callback();
                     });
-                    
+
                     // we have one more async call so we don't want the callback yet.
                     return false;
                 }
@@ -371,7 +371,7 @@
                     {
                         context.currentId = file.id;
                         context.pwd += '\\' + file.name;
-    
+
                         // start loading the children.
                         datamodel.getFile(file.id);
                     }
@@ -384,11 +384,11 @@
                         $output.html(directoryName + ' does not exist');
                     }
                 }
-                
-                callback();        
+
+                callback();
             });
         }
-        
+
         // MUSIC commands
         function play($output, callback, commandData)
         {
@@ -417,7 +417,7 @@
                 $('#music')[0].play();
             }
         }
-        
+
         function next()
         {
             if (context.songQueue.length > 0)
@@ -431,12 +431,12 @@
                 }, 0);
             }
         }
-        
+
         function pause()
         {
             $('#music')[0].pause();
         }
-        
+
         function queue($output, callback, commandData)
         {
             var filename = commandData.args[0];
@@ -445,7 +445,7 @@
                 // add the file to the queue
                 datamodel.getFile(context.currentId, function(folder) {
                     var file = folder.getChild(filename);
-                    
+
                     if (filename == '*' || filename == '*.mp3')
                     {
                         for (var i = 0; i < folder.sortedChildList.length; i++)
@@ -465,10 +465,10 @@
                     {
                         $output.html('invalid music file');
                     }
-    
+
                     callback();
                 });
-                
+
                 return false;
             }
             else
@@ -482,7 +482,7 @@
                 $output.html(output);
             }
         }
-        
+
         // SYSTEM commands
         function color(color)
         {
@@ -491,7 +491,7 @@
             if (color == 'green')
                 $('body').css('color', '#0f0');
         }
-        
+
         function imsorry($output, callback, commandData, movecopy)
         {
             var user = datamodel.getUser();
@@ -507,13 +507,13 @@
             output += '  login - opens the login window, make sure your browser doesnt block the popup<br/>';
             output += '  logout<br />';
             output += '<br />';
-            
+
             output += 'NAVIGATION<br />';
             output += '  dir - displays contents of current directory<br />';
             output += '  cd directory - navigates to the directory<br />';
             output += '  clear - clears the terminal window<br />';
             output += '<br />';
-            
+
             output += 'FILE<br />';
             output += '  mkdir directory - creates a new directory<br />';
             output += '  mv source destination - moves the source file to the destination<br />';
@@ -521,7 +521,7 @@
             output += '  view file - opens a file in the browser<br />';
             output += '  download file - downloads a file<br />';
             output += '<br />';
-            
+
             output += 'SYSTEM<br />';
             output += '  ver - displays the system version<br />';
             output += '  green - sets command line text to green<br />';
@@ -530,7 +530,7 @@
 
             $output.html(output);
         }
-    
+
         function parse(input)
         {
             var result = {
@@ -539,37 +539,37 @@
             };
             input = $.trim(input);
             var commandParts = input.split(' ');
-            
+
             if (commandParts.length == 0)
             {
                 return result;
             }
-            
+
             result.name = commandParts.splice(0,1)[0];
-            
+
             if (commandParts.length == 0)
             {
                 result.length = 0;
                 return result;
             }
-            
+
             var args = commandParts;
             if (args[0].charAt(0) == '/')
             {
                 // parse flags
                 var flags = args.splice(0,1)[0];
                 flags = flags.substr(1).split('');
-                
+
                 var flagDict = {};
                 for (var i = 0; i < flags.length; i++)
                 {
                     var flag = flags[i];
                     flagDict[flag] = true;
                 }
-                
+
                 result.flags = flagDict;
             }
-            
+
             var waitingForArgToEnd = false;
             var parsedArgs = [];
             var currentArg = '';
@@ -583,16 +583,16 @@
                         result.error = "invalid syntax";
                         break;
                     }
-                    
+
                     waitingForArgToEnd = true;
                     arg = arg.substr(1);
                 }
-                
+
                 if (!waitingForArgToEnd)
                 {
                     currentArg = '';
                 }
-                
+
                 if (arg != '' && arg.charAt(arg.length - 1) == '"')
                 {
                     if (!waitingForArgToEnd)
@@ -600,22 +600,22 @@
                         result.error = "invalid syntax";
                         break;
                     }
-                    
+
                     arg = arg.substr(0, arg.length - 1);
                     waitingForArgToEnd = false;
                 }
-                
+
                 currentArg += ' ' + arg;
-                
+
                 if (!waitingForArgToEnd)
                 {
                     parsedArgs.push($.trim(currentArg));
                     currentArg = '';
                 }
             }
-            
+
             result.args = parsedArgs;
-            
+
             return result;
         }
     };

@@ -1,13 +1,13 @@
 (function() {
     if (!window.skycmd)
         window.skycmd = {};
-            
+
     var filesById = {};
     var userInfo = null;
     var loggingIn = false;
 
     skycmd.datamodel = function() { };
-    
+
     var proto =  skycmd.datamodel.prototype;
 
     // MKDIR
@@ -33,7 +33,7 @@
             callback(false);
             return;
         }
-        
+
         var me = this;
 
         // create the path of the current directory
@@ -43,7 +43,7 @@
         {
             destination = '/me/skydrive';
         }
-           
+
         // make the POST request
         WL.api(
             {
@@ -68,7 +68,7 @@
             }
         );
     };
-    
+
     // MOVECOPY
     //
     // moves or copies a FILE to the DESTINATION
@@ -86,7 +86,7 @@
     proto.movecopy = function(file, destinationId, movecopy, callback)
     {
         var me = this;
-    
+
         WL.api(
             {
                 path: '/' + file.id,
@@ -96,7 +96,7 @@
             function(response) {
                 if (!response.error)
                 {
-                    // success: clear source and destination from cache    
+                    // success: clear source and destination from cache
                     var id = destinationId || 'root';
                     delete filesById[id];
                     me.getFile(destinationId);
@@ -115,14 +115,14 @@
             }
         );
     };
-    
+
     // GETFILE
     //
     // retrieves a file and its children (if folder) from the server and caches
     //
     // ID: id of the file to load
     // CALLBACK: callback function called when the item is loaded. CALLBACK is called with the FILE that was loaded
-    // 
+    //
     // if the file is already cached, the callback is called immediately with the cached file
     proto.getFile = function(id, callback)
     {
@@ -131,13 +131,13 @@
         if (!file || (file.isFolder() && file.isLoading))
         {
             // The children of this folder have not been downloaded yet.
-            
+
             if (!file)
             {
                 // This file does not exist yet. Create it.
                 file = filesById[id] = new skycmd.file(id);
             }
-            
+
             // Fetch children.
             WL.api(
                 {
@@ -153,7 +153,7 @@
         // This item is fully loaded.
         callback && callback(file);
     };
-    
+
     // LOGIN
     //
     // logs the user in to their LIVE ID
@@ -168,7 +168,7 @@
             function (response) {
                 if (response.status == "connected") {
                     loggedIn(function() {
-                        callback(true); 
+                        callback(true);
                     });
                 }
                 else
@@ -180,7 +180,7 @@
                 }
             });
     };
-    
+
     // LOGOUT
     //
     // logs the user out of their LIVE ID
@@ -192,7 +192,7 @@
         waitings = {};
         loggingIn = false;
     };
-    
+
     // CHECKLOGINSTATUS
     //
     // checks the login status of the user. If user is not logged in, tries to authenticate the user.
@@ -210,12 +210,12 @@
             {
                 if (!calledBack)
                 {
-                    callback();   
+                    callback();
                 }
             }
             calledBack = true;
         });
-        
+
         // sometimes the getLoginStatus doesnt ever call the callback function. This ensures that it gets called at some point.
         setTimeout(function() {
             if (!calledBack)
@@ -225,38 +225,38 @@
             }
         }, 2000);
     };
-    
+
     // GETUSER
-    // 
+    //
     // gets the user info. NULL if user is not logged in
     proto.getUser = function()
     {
         return userInfo;
     };
-    
+
     function loggedIn(callback)
     {
         WL.api({
             path: '/me',
             method: 'GET'
         },
-        function(response) {            
+        function(response) {
             userInfo = response;
             loggingIn = false;
             callback();
         });
     }
-    
+
     function processResponse(id, response, callback)
     {
         if (!response.error) {
             id = id || 'root';
             var folder = filesById[id];
-        
+
             var children = response.data;
-            
+
             if (folder.sortedChildList == 0)
-            {        
+            {
                 for (var i = 0; i < children.length; i++)
                 {
                     var childId = children[i].id;
@@ -264,18 +264,18 @@
                     file.parent_id = id == 'root' ? '' : id;
                     file.isLoading = true;
                     file.path = (!!folder.path ? (folder.path) : '') + '\\' + file.name;
-                
+
                     // add to parent folder
                     folder.sortedChildList.push(file);
                     folder.childrenByName[file.name.toLowerCase()] = file;
-                
+
                     folder.sortedChildList.sort(sortChildren);
                 }
-            
+
             }
             // This folder has now been fully loaded.
             folder.isLoading = false;
-            
+
             callback && callback(folder);
         }
     }

@@ -1,7 +1,7 @@
 $(document).ready(function() {
     window.$document = $(document);
     window.$body = $('body');
-    
+
     WL.init({ client_id: '000000004008822A', redirect_uri: 'http://www.txtsync.com/oauth/callback.php' });
     var datamodel = new skycmd.datamodel();
     $('#container').text('loading...');
@@ -14,7 +14,7 @@ $(document).ready(function() {
     datamodel.checkLoginStatus(function() {
         var terminal = new skycmd.terminal($('#container'), datamodel, context);
     });
-    
+
     $('#music').bind('ended', function(e) {
         if (context.songQueue.length > 0)
         {

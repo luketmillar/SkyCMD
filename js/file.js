@@ -1,7 +1,7 @@
 (function() {
     if (!window.skycmd)
         window.skycmd = {};
-        
+
     skycmd.file = function(id, jsonfile)
     {
         this.isLoading = true;
@@ -11,9 +11,9 @@
         this.id = id;
         this.path = '';
         this.type = '';
-        
+
         $.extend(this, jsonfile);
-        
+
         // GETCHILD
         //
         // does a case-insensitive lookup of the the child by filename
@@ -28,7 +28,7 @@
                 return this.childrenByName[filename.toLowerCase()];
             }
         };
-        
+
         // ISFOLDER
         //
         // whether or not the item is a folder or and album
@@ -36,7 +36,7 @@
         {
             return this.type == 'folder' || this.type == 'album';
         };
-        
+
         // GETAPIPATH
         //
         // gets the path that is used for fetching the item from the api
@@ -45,7 +45,7 @@
         this.getApiPath = function()
         {
             var apiPath = '';
-            
+
             if (!this.id || this.id == '' || this.id == 'root')
             {
                 apiPath = "/me/skydrive/files";
@@ -57,7 +57,7 @@
 
             return apiPath;
         };
-        
+
         // HASCHILDREN
         //
         // returns whether or not this file has any children
@@ -65,7 +65,7 @@
         {
             return this.sortedChildList.length > 0;
         };
-        
+
         // HASEXTENSION
         //
         // checks to see if the file has a certain extension
@@ -73,7 +73,7 @@
         // EXTENSION: string representing the extenstion to check for (ex 'mp3')
         this.hasExtension = function(extension)
         {
-            return extension && this.name.substr(this.name.length - (extension.length + 1)) == '.' + extension;    
+            return extension && this.name.substr(this.name.length - (extension.length + 1)) == '.' + extension;
         };
     };
 })();

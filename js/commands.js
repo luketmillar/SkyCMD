@@ -495,8 +495,8 @@
         function imsorry($output, callback, commandData, movecopy)
         {
             var user = datamodel.getUser();
-            var username = (user && user.name) || '';
-            $output.html("I'm sorry " + username + ", I'm afraid I can't do that...");
+            var username = (user && ' ' + (user.first_name || user.name)) || '';
+            $output.html("I'm sorry" + username + ", I'm afraid I can't do that...");
         }
 
         // HELP

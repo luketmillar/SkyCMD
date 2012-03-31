@@ -2,7 +2,7 @@
 {
     if (!window.skycmd)
         window.skycmd = {};
-    
+
      skycmd.terminal = function($container, datamodel, context) {
         var $currentConsoleLine;
         var currentPath = '';
@@ -11,49 +11,49 @@
         var commandCount = 0;
         var firstname = '';
         var loggedIn = false;
-        var currentId;        
+        var currentId;
         var searchTerm = '';
         var searchIndex = 0;
         var matches = [];
 
         var runningCommand = false;
         var commands = new  skycmd.commands($container, datamodel, context);
-        
+
         init();
-        
+
         function init()
-        { 
-            var welcomeText = '<pre>     _____ __ __  __ _____  _   _     ____\n' + 
-                              '    / ___// /_\\ \\/ // ___/ / | / |   / _  \\\n' + 
-                              '    \\__ \\/ / / \\  // /    /  |/  |  / / / /\n' + 
-                              '  ____/ /   /  / // /___ / /\\_/| | / /_/ /\n' + 
+        {
+            var welcomeText = '<pre>     _____ __ __  __ _____  _   _     ____\n' +
+                              '    / ___// /_\\ \\/ // ___/ / | / |   / _  \\\n' +
+                              '    \\__ \\/ / / \\  // /    /  |/  |  / / / /\n' +
+                              '  ____/ /   /  / // /___ / /\\_/| | / /_/ /\n' +
                               ' /_____/_/|_\\ /_/ \\____//_/    |_|/_____/\n\n\n</pre>';
-			welcomeText += 'type "help" for list of supported commands<br /><br />';
-			welcomeText += '<br />';
+            welcomeText += 'type "help" for list of supported commands<br /><br />';
+            welcomeText += '<br />';
             $container.html(welcomeText);
-            
+
             newCommandLine();
-            
+
             datamodel.getFile();
-            
-            $body.keydown(onKeyDown);  
-            
+
+            $body.keydown(onKeyDown);
+
             setTimeout(blink, 600);
         }
-        
+
         function onKeyDown(e)
         {
                 var key = e.which;
                 var handled = false;
                 var text = $currentConsoleLine.text();
 
-				// remove photo
+                // remove photo
                 if ($('#overlay').size() > 0)
                 {
                     $('#overlay').remove();
                     return true;
                 }
-                
+
                 // ignore any keystrokes with alt, ctrl or cmd
                 if (e.metaKey || e.altKey || e.ctrlKey || runningCommand)
                 {
@@ -64,13 +64,13 @@
                         {
                             runningCommand = false;
                             newCommandLine();
-                            $(document).scrollTop($(document).height());   
+                            $(document).scrollTop($(document).height());
                         }
                     }
-                        
+
                     return true;
                 }
-                
+
                 // up should go back in history
                 if (e.which == keymap.up) {
                     if (commandCount > 0) {
@@ -78,7 +78,7 @@
 
                         $currentConsoleLine.html(commandHistory[commandCount]);
                     }
-                    
+
                     return false;
                 }
 
@@ -92,7 +92,7 @@
                         $currentConsoleLine.html('');
                         commandCount = commandHistory.length;
                     }
-                    
+
                     return false;
                 }
 
@@ -102,17 +102,17 @@
                     var character = keymap.uppercase[key];
                     $currentConsoleLine.text(text + character);
                     resetSearch();
-                    
+
                     return false;
                 }
-                
+
                 // supported key presses
                 if (keymap.lowercase[key])
                 {
                     var character = keymap.lowercase[key];
                     $currentConsoleLine.text(text + character);
                     resetSearch();
-                    
+
                     return false;
                 }
 
@@ -121,7 +121,7 @@
                     text = text.substr(0, text.length - 1);
                     $currentConsoleLine.text(text);
                     resetSearch();
-                    
+
                     return false;
                 }
 
@@ -129,50 +129,50 @@
                 if (e.which == keymap.tab) {
                     var words = searchTerm.split(' ');
                     var lastWord = words[words.length - 1];
-    				var newText = searchTerm.substr(0, searchTerm.length - lastWord.length);
+                    var newText = searchTerm.substr(0, searchTerm.length - lastWord.length);
 
                     datamodel.getFile(context.currentId, function(folder)
-					{
-	                    // need to find all of the search matches
-	                    if (matches.length == 0)
-	                    {
-	                        for (var i = 0; i < folder.sortedChildList.length; i++)
-	                        {
-	                            var file = folder.sortedChildList[i];
-	                            if (file.name.substr(0, lastWord.length).toLowerCase() == lastWord.toLowerCase())
-	                            {
-	                                matches.push(file.name);
-	                            }
-	                        }   
-	                    }
+                    {
+                        // need to find all of the search matches
+                        if (matches.length == 0)
+                        {
+                            for (var i = 0; i < folder.sortedChildList.length; i++)
+                            {
+                                var file = folder.sortedChildList[i];
+                                if (file.name.substr(0, lastWord.length).toLowerCase() == lastWord.toLowerCase())
+                                {
+                                    matches.push(file.name);
+                                }
+                            }
+                        }
 
-	                    // get the current match and update the command
-	    				var filename = matches[searchIndex];
-	    				if (filename)
-	    				{
-	        				if (filename.indexOf(' ') != -1)
-	        				{
-	        				    filename = '"' + filename + '"';
-	        				}
-	                        $currentConsoleLine.text(newText + filename);   
-	    				}
+                        // get the current match and update the command
+                        var filename = matches[searchIndex];
+                        if (filename)
+                        {
+                            if (filename.indexOf(' ') != -1)
+                            {
+                                filename = '"' + filename + '"';
+                            }
+                            $currentConsoleLine.text(newText + filename);
+                        }
 
-	                    searchIndex++;
-	                    if (searchIndex >= matches.length)
-	                        searchIndex = 0;	
-					});
-                    
+                        searchIndex++;
+                        if (searchIndex >= matches.length)
+                            searchIndex = 0;
+                    });
+
                     return false;
                 }
-                
+
                 // escape clears the command line
                 if (e.which == keymap.escape) {
                     $currentConsoleLine.html('');
                     resetSearch();
-                    
+
                     return false;
                 }
-                
+
                 // enter evaluates the command
                 if (e.which == keymap.enter) {
                     $('#cursor').remove();
@@ -191,7 +191,7 @@
                             {
                                 runningCommand = false;
                                 newCommandLine();
-                                $(document).scrollTop($(document).height());   
+                                $(document).scrollTop($(document).height());
                             }
                         });
                         $(document).scrollTop($(document).height());
@@ -210,7 +210,7 @@
             searchIndex = 0;
             matches = [];
         }
-        
+
         function echoOutput(text) {
             text = '<div class="output">' + text + '</div><br />';
             echo(text);
@@ -226,12 +226,12 @@
             $container.append('<div><span class="path">' +  username + ':SkyDrive' + context.pwd + '&gt;</span><span class="console"></span><span id="cursor">_</span></div>');
             $currentConsoleLine = $('.console:last');
         }
-        
+
         function blink(show)
         {
             $('#cursor').toggle(show);
             setTimeout(function() { blink(!show); }, 600);
         }
     };
-    
+
 })();

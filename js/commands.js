@@ -100,11 +100,11 @@
                 needsAuth: true,
                 syntax: 'queue music.mp3 OR queue'
             },
-            'view': {
-                func: view,
+            'start': {
+                func: start,
                 requiredArgs: 1,
                 needsAuth: true,
-                syntax: 'view photo.jpg'
+                syntax: 'start photo.jpg'
             },
             'pause': {
                 func: pause,
@@ -196,7 +196,7 @@
             return false;
         }
 
-        function view($output, callback, commandData)
+        function start($output, callback, commandData)
         {
             var filename = commandData.args[0];
             datamodel.getFile(context.currentId, function(folder) {
@@ -518,7 +518,7 @@
             output += '  mkdir directory - creates a new directory<br />';
             output += '  move source destination - moves the source file to the destination<br />';
             output += '  copy source destination - copies the source file to the destination<br />';
-            output += '  view file - opens a file in the browser<br />';
+            output += '  start file - opens a file in the browser<br />';
             output += '  download file - downloads a file<br />';
             output += '<br />';
 

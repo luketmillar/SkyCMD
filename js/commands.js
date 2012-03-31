@@ -151,7 +151,7 @@
                 syntax: 'copy source destination'
             },
             'ver': {
-                func: function($output) { $output.html('ver=04.1.2012'); },
+                func: function($output) { $output.html('ver=4.1.2012'); },
                 syntax: 'ver'
             },
             'format': {

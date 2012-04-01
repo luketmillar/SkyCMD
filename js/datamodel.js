@@ -261,7 +261,6 @@
                 {
                     var childId = children[i].id;
                     var file = filesById[childId] = new skycmd.file(childId, children[i]);
-                    //file.parent_id = id == 'root' ? '' : id;
                     file.isLoading = true;
                     file.path = (!!folder.path ? (folder.path) : '') + '\\' + file.name;
 

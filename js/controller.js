@@ -2,7 +2,7 @@ $(document).ready(function() {
     window.$document = $(document);
     window.$body = $('body');
 
-    WL.init({ client_id: '000000004008822A', redirect_uri: 'http://www.txtsync.com/oauth/callback.php' });
+    WL.init({ client_id: '000000004008822A' });
     var datamodel = new skycmd.datamodel();
     $('#container').text('loading...');
     var context = {

@@ -34,7 +34,7 @@
         // whether or not the item is a folder or and album
         this.isFolder = function()
         {
-            return this.type == 'folder' || this.type == 'album';
+            return this.type == 'folder' || this.type == 'album' || this.path == '';
         };
 
         // GETAPIPATH

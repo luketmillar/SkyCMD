@@ -125,10 +125,15 @@
             'green': {
                 func: function () { color('green'); },
                 needsAuth: false,
-                syntax: 'color'
+                syntax: 'green'
             },
             'white': {
                 func: function () { color('white'); },
+                needsAuth: false,
+                syntax: 'white'
+            },
+            'color': {
+                func: function () { $('body').toggleClass('green'); },
                 needsAuth: false,
                 syntax: 'color'
             },
@@ -243,18 +248,29 @@
                     {
                         destinationId = folder.parent_id;
                     }
-
-                    datamodel.movecopy(sourceFile, destinationId, movecopy, function(succeeded)
+                    
+                    datamodel.getFile(destinationId, function(destinationItem)
                     {
-                        if (succeeded)
+                        if (destinationItem.isFolder())
                         {
-                            $output.html(t_movedcopied + ' ' + source + ' to ' + destination);
+                            datamodel.movecopy(sourceFile, destinationId, movecopy, function(succeeded)
+                            {
+                                if (succeeded)
+                                {
+                                    $output.html(t_movedcopied + ' ' + source + ' to ' + destination);
+                                }
+                                else
+                                {
+                                    $output.html(t_movecopy + ' failed');
+                                }
+                                callback();
+                            });
                         }
                         else
                         {
-                            $output.html(t_movecopy + ' failed');
+                            $output.html(destination + ' is not a folder');
+                            callback();
                         }
-                        callback();
                     });
                     return false;
                 }
@@ -361,10 +377,6 @@
                     // we have one more async call so we don't want the callback yet.
                     return false;
                 }
-                else if (directoryName == '\\') {
-                    context.currentId = '';
-                    context.pwd = '';
-                }
                 else if (directoryName != '.' && directoryName != '.\\') {
                     var file = folder.getChild(directoryName);
                     if (file && file.isFolder())
@@ -387,6 +399,8 @@
 
                 callback();
             });
+            
+            return false;
         }
 
         // MUSIC commands
@@ -486,10 +500,7 @@
         // SYSTEM commands
         function color(color)
         {
-            if (color == 'white')
-                $('body').css('color', '#fff');
-            if (color == 'green')
-                $('body').css('color', '#0f0');
+            $('body').toggleClass('green', color == 'green');
         }
 
         function imsorry($output, callback, commandData, movecopy)
@@ -510,16 +521,16 @@
 
             output += 'NAVIGATION<br />';
             output += '  dir - displays contents of current directory<br />';
-            output += '  cd directory - changes the current directory<br />';
+            output += '  cd [directory] - changes the current directory<br />';
             output += '  cls - clears the terminal window<br />';
             output += '<br />';
 
             output += 'FILE<br />';
-            output += '  mkdir directory - creates a new directory<br />';
-            output += '  move source destination - moves the source file to the destination<br />';
-            output += '  copy source destination - copies the source file to the destination<br />';
-            output += '  start file - opens a file in the browser<br />';
-            output += '  download file - downloads a file<br />';
+            output += '  mkdir [directory] - creates a new directory<br />';
+            output += '  move [source] [destination] - moves the source file to the destination<br />';
+            output += '  copy [source] [destination] - copies the source file to the destination<br />';
+            output += '  start [file] - opens a file in the browser<br />';
+            output += '  download [file] - downloads a file<br />';
             output += '<br />';
 
             output += 'SYSTEM<br />';
